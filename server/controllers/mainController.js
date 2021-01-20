@@ -6,6 +6,24 @@ const client = yelp.client(
 const ClosedStores = require("../models/closedStoreModel.js");
 
 const mainController = {};
+
+mainController.getClosedStores = (req, res, next) => {
+  ClosedStores.find({}, (err, closedStores) => {
+    console.log('closedStores in mainController.getClosedStores:', closedStores);
+    if (err) return next(`Error in getClosedStores middleware: ${err}`);
+    const closedStoreIdCache = {};
+    // this is an arr of objs which has closed store id's
+    for (let obj of closedStores) {
+      let innerId = obj.storeId;
+      // the actual id values are the keys, bools are the vals
+      closedStoreIdCache[innerId] = true;
+    }
+    console.log('closedStoreIdCache in mainController.getClosedStores:', closedStoreIdCache);
+    res.locals.closedStoresList = closedStoreIdCache;
+    return next();
+  });
+};
+
 mainController.getResults = (req, res, next) => {
   const { term, longitude, latitude } = req.body;
 
@@ -20,6 +38,7 @@ mainController.getResults = (req, res, next) => {
       let counter = 0;
       const reducedResults = response.jsonBody.businesses.reduce(
         (acc, cv, idx) => {
+          // console.log('cv in mainController.getResults:', cv);
           // checking if the results arr of obj's id matches the closed store's arr of obj's id
           if (res.locals.closedStoresList.hasOwnProperty(cv.id)) {
             counter++;
@@ -46,21 +65,6 @@ mainController.getResults = (req, res, next) => {
     .catch((e) => {
       console.log(e);
     });
-};
-
-mainController.getClosedStores = (req, res, next) => {
-  ClosedStores.find({}, (err, closedStores) => {
-    if (err) return next(`Error in getClosedStores middleware: ${err}`);
-    const closedStoreIdCache = {};
-    // this is an arr of objs which has closed store id's
-    for (let obj of closedStores) {
-      let innerId = obj.storeId;
-      // the actual id values are the keys, bools are the vals
-      closedStoreIdCache[innerId] = true;
-    }
-    res.locals.closedStoresList = closedStoreIdCache;
-    return next();
-  });
 };
 
 mainController.reportClosed = (req, res, next) => {

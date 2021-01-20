@@ -7,11 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production nodemon server/server.js",
     "build": "cross-env NODE_ENV=production webpack",
-<<<<<<< HEAD
-    "dev": "concurrently \"cross-env NODE_ENV=development webpack serve --open\" \"nodemon server/server.js\""
-=======
     "dev": "concurrently \"cross-env NODE_ENV=development webpack serve --open --hot\" \"nodemon server/server.js\""
->>>>>>> de51bfdce38cc448bcef6c578ebccfb15595d2ac
   },
   "keywords": [],
   "author": "Team Goblin Shark",
@@ -19,11 +15,14 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "concurrently": "^5.3.0",
+    "cookie-session": "^1.4.0",
     "css-loader": "^5.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.11.12",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",

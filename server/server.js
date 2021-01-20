@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
 app.use(
   cookieSession({
-    name: "LocallySRCD",
+    name: "LocallySCRD",
     keys: ["key1", "key2"],
   })
 );

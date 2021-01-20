@@ -11,7 +11,7 @@ const MongoURI = 'mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<dbName>
 const dbName = 'locally-srcd';
 
 // your name of collection that stores closed stores
-const closedStores = 'closedStores';
+const closedStores = 'closedstores';
 
 module.exports = {
   MongoURI,

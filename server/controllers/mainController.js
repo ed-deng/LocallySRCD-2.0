@@ -1,9 +1,9 @@
-const path = require('path');
-const yelp = require('yelp-fusion');
+const path = require("path");
+const yelp = require("yelp-fusion");
 const client = yelp.client(
-  'C875dNRjWAzLaQgmC7nd_wO97JFWpg6PuDdI9mfVsru_cOTvyoouijdnEAQwW2rnVUJ5lELwswChXgQaOJpSNpLK4tK6Jr_Gi1xRtp3dWA2UZT7B7xYP5zDBmEYDYHYx'
+  "C875dNRjWAzLaQgmC7nd_wO97JFWpg6PuDdI9mfVsru_cOTvyoouijdnEAQwW2rnVUJ5lELwswChXgQaOJpSNpLK4tK6Jr_Gi1xRtp3dWA2UZT7B7xYP5zDBmEYDYHYx"
 );
-const ClosedStores = require('../models/closedStoreModel.js');
+const ClosedStores = require("../models/closedStoreModel.js");
 
 const mainController = {};
 mainController.getResults = (req, res, next) => {
@@ -22,10 +22,10 @@ mainController.getResults = (req, res, next) => {
         (acc, cv, idx) => {
           // checking if the results arr of obj's id matches the closed store's arr of obj's id
           let storeIdVal = cv.id;
-          if (res.locals.closedStoresList.hasOwnProperty(storeIdVal)) {
-            counter++;
-            return acc;
-          }
+          // if (res.locals.closedStoresList.hasOwnProperty(storeIdVal)) {
+          //   counter++;
+          //   return acc;
+          // }
 
           // delete irrelevant key val pairs from yelp's API response
           if (idx < 10 + counter) {
@@ -74,7 +74,7 @@ mainController.reportClosed = (req, res, next) => {
     (err, newClosedStore) => {
       if (err)
         return next({
-          log: 'Error: Store Is Already Marked As Closed',
+          log: "Error: Store Is Already Marked As Closed",
           message: err,
         });
       const { storeId } = newClosedStore;

@@ -2,7 +2,6 @@ const path = require("path");
 // importing express here 👇
 const express = require("express");
 const app = express();
-const PORT = 3000; // this is your port 👈
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 require("./controllers/googleCredentials");
@@ -80,8 +79,7 @@ app.use((err, req, res, next) => {
   return res.status(errorObj.status).send(errorObj.message);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port: 🐼 ${PORT} 🐼`);
-});
+// app.listen moved to start.js file because when running tests, app.listen
+// needs to be run from the test file so there are no "port in use" conflicts
 
 module.exports = app;

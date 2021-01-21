@@ -48,14 +48,14 @@ app.use(function (req, res, next) {
 });
 
 // flow check -> quick check what requests we get from the client instead of checking the Network Tab in Chrome DevTools
-app.use((req, res, next) => {
-  console.log(`
-  *** FLOW METHOD ***\n
-  URL: ${req.url}\n
-  BODY: ${req.body}\n
-  METHOD: ${req.method}\n`);
-  return next();
-});
+// app.use((req, res, next) => {
+//   console.log(`
+//   *** FLOW METHOD ***\n
+//   URL: ${req.url}\n
+//   BODY: ${req.body}\n
+//   METHOD: ${req.method}\n`);
+//   return next();
+// });
 
 app.use(
   cookieSession({

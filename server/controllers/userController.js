@@ -62,15 +62,35 @@ const userController = {
   },
 
   getGoogleUser(req, res, next) {
-    User.findOne({}, (err, user) => {
-      if (err) {
-        console.log(err);
-        return next(err);
-      } else {
-        console.log("this is the user: ", user);
-        res.locals.username = user.username;
-        return next();
-      }
+    User.find({}, (err, user) => {
+      console.log(user);
+      user = user.filter((userObj) => userObj.lastGoogleSignIn);
+      let newestSignIn = [];
+      user.forEach((el) => {
+        newestSignIn.push(el.lastGoogleSignIn);
+      });
+      newestSignIn = Math.max(...newestSignIn);
+      let newestSignInArr = user.filter(
+        (userObj) => userObj.lastGoogleSignIn === newestSignIn
+      );
+      // const sortedArr = user.sort((a, b) => {
+      //   a.lastGoogleSignIn > b.lastGoogleSignIn ? 1 : -1;
+      // });
+      console.log(
+        "this should be the most recent sign in with google: ",
+        newestSignInArr[0].username
+      );
+      res.locals.username = newestSignInArr[0].username;
+
+      return next();
+      // if (err) {
+      //   console.log(err);
+      //   return next(err);
+      // } else {
+      //   console.log("this is the user: ", user);
+      //   res.locals.username = user.username;
+      //   return next();
+      // }
     });
   },
   // .find().sort({ _id: -1 }).limit(10)

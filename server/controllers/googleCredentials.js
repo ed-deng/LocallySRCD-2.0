@@ -49,8 +49,9 @@ passport.use(
       clientSecret,
       callbackURL: "http://localhost:8080/google/callback",
     },
-    (req, res, next) => return next(),
+
     function (accessToken, refreshToken, profile, done) {
+      //check if the user exists, and add to db if not
       User.findOrCreate(
         { username: profile.displayName },
         { password: profile.displayName },
@@ -59,10 +60,34 @@ passport.use(
           if (err) {
             return done(err);
           }
+          //update last sign-in field in db
+
           // res.cookie("test", "value");
-          return done(null, profile);
         }
       );
+      User.findOneAndUpdate(
+        { username: profile.displayName },
+        { lastGoogleSignIn: Date.now() },
+        { upsert: true, new: true },
+        (err, user) => {
+          if (err) {
+            return done(err);
+          }
+          // console.log("this is the second db query: ", user);
+        }
+      );
+      return done(null, profile);
     }
   )
 );
+
+// const filter = { name: 'Jean-Luc Picard' };
+// const update = { age: 59 };
+
+// // `doc` is the document _after_ `update` was applied because of
+// // `new: true`
+// let doc = await Character.findOneAndUpdate(filter, update, {
+//   new: true
+// });
+// doc.name; // 'Jean-Luc Picard'
+// doc.age; // 59

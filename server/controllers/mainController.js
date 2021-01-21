@@ -23,71 +23,74 @@ mainController.getClosedStores = async (req, res, next) => {
     res.locals.closedStoresList = closedStoreIdCache;
     return next();
   } catch(err) {
-    return next(`Error in getClosedStores middleware: ${err}`);
+    return next({
+      log: "Error in mainController.getClosedStores",
+      // status: 400,
+      message: { err: "ERROR: Unable to get closed stores" }
+    })
   }
 };
 
-mainController.getResults = (req, res, next) => {
-  const { term, longitude, latitude } = req.body;
+mainController.getResults = async (req, res, next) => {
+  try {
+    const { term, longitude, latitude } = req.body;
 
-  client
-    .search({
+    const response = await client.search({
       term: term,
       latitude: latitude,
       longitude: longitude,
     })
-    .then((response) => {
-      // use reduce to take response object's array of businesses and reduce it down to 10 results, removing unneeded key-value pairs
-      let counter = 0;
-      const reducedResults = response.jsonBody.businesses.reduce(
-        (acc, cv, idx) => {
-          // console.log('cv in mainController.getResults:', cv);
-          // checking if the results arr of obj's id matches the closed store's arr of obj's id
-          if (res.locals.closedStoresList.hasOwnProperty(cv.id)) {
-            counter++;
-            return acc;
-          }
 
-          // delete irrelevant key val pairs from yelp's API response
-          if (idx < 10 + counter) {
-            delete cv.alias;
-            delete cv.is_closed;
-            delete cv.transactions;
-            delete cv.price;
-            acc.push(cv);
-          }
-          return acc;
-        },
-        []
-      );
-      res.locals.results = reducedResults;
-      // send back term,
-      res.locals.term = term;
-      return next();
+    // take response object's array of businesses and reduce it down to 10 results
+    // while removing unneeded key-value pairs
+    let counter = 0;
+    const reducedResults = response.jsonBody.businesses.reduce((acc, cv, idx) => {
+      // checking if the results arr of obj's id matches the closed store's arr of obj's id
+      if (res.locals.closedStoresList.hasOwnProperty(cv.id)) {
+        counter++;
+        return acc;
+      }
+
+      // delete irrelevant key val pairs from yelp's API response
+      if (idx < 10 + counter) {
+        delete cv.alias;
+        delete cv.is_closed;
+        delete cv.transactions;
+        delete cv.price;
+        acc.push(cv);
+      }
+
+      return acc;
+    }, []);
+
+    res.locals.results = reducedResults;
+    res.locals.term = term;
+
+    return next();
+  } catch(err) {
+    return next({
+      log: "Error in mainController.getResults",
+      // status: 400,
+      message: { err: "ERROR: Unable to show results" }
     })
-    .catch((e) => {
-      console.log(e);
-    });
+  }
 };
 
-mainController.reportClosed = (req, res, next) => {
-  const { storeId } = req.body;
+mainController.reportClosed = async (req, res, next) => {
+  try {
+    const { storeId: reqStoreId } = req.body;
+    const newClosedStore = await ClosedStores.create({ storeId: reqStoreId });
+    const { storeId: closedStoreId } = newClosedStore;
 
-  ClosedStores.create(
-    {
-      storeId: storeId,
-    },
-    (err, newClosedStore) => {
-      if (err)
-        return next({
-          log: "Error: Store Is Already Marked As Closed",
-          message: err,
-        });
-      const { storeId } = newClosedStore;
-      res.locals.closedStoreId = storeId;
-      return next();
-    }
-  );
+    res.locals.closedStoreId = closedStoreId;
+    return next();
+  } catch(err) {
+    return next({
+      log: "Error in mainController.reportClosed: store might already be marked as closed",
+      // status: 400,
+      message: { err: "ERROR: Unable to report store as closed" }
+    })
+  }
 };
 
 module.exports = mainController;

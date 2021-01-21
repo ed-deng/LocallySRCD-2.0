@@ -6,20 +6,11 @@ const passport = require("passport");
 const cookieSession = require("cookie-session");
 require("./controllers/googleCredentials");
 
-// requiring mongoose
-const mongoose = require("mongoose");
-const { MongoURI } = require("./settings");
-
 // requiring routers here
 const apiRouter = require("./routes/api.js");
 const signupRouter = require("./routes/signup.js");
 const loginRouter = require("./routes/login.js");
 const googleRouter = require("./routes/google");
-
-mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.connection.once("open", () => {
-  console.log("connected to our DB!");
-});
 
 // parsing any JSON body we get first
 app.use(express.json());

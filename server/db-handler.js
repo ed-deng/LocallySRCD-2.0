@@ -4,10 +4,10 @@ const mongod = new MongoMemoryServer();
 
 const { MongoURI } = require("./settings.js");
 
-console.log('process.env.NODE_ENV in db-handler:', process.env.NODE_ENV);
+// console.log('process.env.NODE_ENV in db-handler:', process.env.NODE_ENV);
 
 /**
- * Connect to the database.
+ * Connect to mongo memory server db if testing, else connect to actual prod db
  */
 module.exports.connect = async () => {
   let activeURI;

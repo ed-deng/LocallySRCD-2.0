@@ -2,63 +2,75 @@ const app = require('../server/server.js');
 const supertest = require('supertest');
 const request = supertest(app);
 
-// const ClosedStores = require('../server/models/closedStoreModel.js');
+const dbHandler = require('../server/db-handler.js');
 
-// jest.useFakeTimers();
+// Connect to a new in-memory database before running any tests
+beforeAll(async () => await dbHandler.connect());
+
+// Clear all test data after every test
+afterEach(async () => await dbHandler.clearDatabase());
+
+// Remove and close the db and server
+afterAll(async () => await dbHandler.closeDatabase());
 
 describe('api route integration', () => {
+  const mockBody = {
+    latitude: 40.7505989074707,
+    longitude: -73.99359893798828,
+    storeId: 'thisIsATestIdNotRealId',
+    term: 'pizza'
+  };
 
-  describe('testing', async () => {
-    it('responds with 200 status', async (done) => {
-      const res = await request.get('/api/test')
-      console.log('res.body:', res.body);
+  describe('POST to /', () => {
+    it('responds with 200 status and text/html content type', async (done) => {
+      const res = await request.post('/api').send(mockBody);
       
       expect(res.status).toBe(200);
-      expect(res.body.message).toBe('Passed');
-
+      expect(res.body).toHaveProperty('results');
+      expect(res.body.term).toBe(mockBody.term);
+      expect(res.body).toHaveProperty('closedStoreList');
       done();
-    })
+    });
   });
 
-  // xdescribe('POST to /report', () => {
-  //   afterEach(async () => {
-  //     await ClosedStores.deleteMany({ storeId: 'thisIsATestIdNotRealId' }, (err) => {
-  //       if(err) console.log('Error occured while deleting test storeId:', err);
-  //       else console.log('Successfully deleted test storeId');
-  //     })
-  //   });
+  describe('POST to /report', () => {
+    it('responds with 200 status and has closedStoreId on body of response that equals mockBody storeId', async (done) => {
+      const res = await request.post('/api/report').send(mockBody);
 
-  //   it('responds with 200 status and text/javascript content type', async (done) => {
-  //     const mockBody = JSON.stringify({
+      expect(res.status).toBe(200);
+      expect(res.body.closedStoreId).toBe(mockBody.storeId);
+      done();
+    });
+  });
+
+  // tests to see if a get request to /api/test works
+  // xdescribe('testing /api/test', () => {
+  //   it('get responds with 200 status', async (done) => {
+  //     const res = await request.get('/api/test')
+      
+  //     expect(res.status).toBe(200);
+  //     expect(res.body.message).toBe('Passed');
+
+  //     done();
+  //   })
+  // });
+
+  // tests to see if a post request to /api/testing works
+  // xdescribe('testing /api/testing', () => {
+  //   it('post responds with 200 status', async (done) => {
+  //     const mockBody = {
   //       latitude: 40.7505989074707,
   //       longitude: -73.99359893798828,
   //       storeId: 'thisIsATestIdNotRealId',
   //       term: 'pizza'
-  //     });
+  //     };
 
-  //     await request.post('/report')
-  //       .send(mockBody)
-  //       .expect('Content-Type', /text\/javascript/)
-  //       .expect(200);
+  //     const res = await request.post('/api/testing').send(mockBody);
+
+  //     expect(res.status).toBe(200);
+  //     expect(mockBody).toEqual(res.body);
 
   //     done();
-  //   });
-  // });
-
-  // xdescribe('POST to /', () => {
-  //   const mockBody = {
-  //     latitude: this.state.latitude,
-  //     longitude: this.state.longitude,
-  //     storeId: closed,
-  //     term: this.state.term,
-  //   };
-
-
-  //   it('responds with 200 status and text/html content type', () => {
-  //     return request(server)
-  //       .post('/')
-  //       .expect('Content-Type', /text\/html/)
-  //       .expect(200);
-  //   });
+  //   })
   // });
 });

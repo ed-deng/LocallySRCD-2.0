@@ -11,13 +11,18 @@ afterEach(async () => await dbHandler.clearDatabase());
 // Remove and close the db and server
 afterAll(async () => await dbHandler.closeDatabase());
 
-describe('userController unit tests', () => {
+xdescribe('userController unit tests', () => {
   it('userController.createUser should...', async (done) => {
 
     done();
   });
 
   it('userController.getUser should...', async (done) => {
+
+    done();
+  });
+
+  it('userController.getGoogleUser should...', async (done) => {
 
     done();
   });

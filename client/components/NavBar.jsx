@@ -9,6 +9,7 @@ const NavBar = ({
   signUpPop,
   signUpButtonHandler,
   createUser,
+  signInWithGoogleHandler,
 }) => {
   // if user is logged in, we should render a new nav bar welcoming back the user.  logInSubmitHandler={logInSubmitHandler}
   console.log("signup?", signUpPop);
@@ -16,20 +17,18 @@ const NavBar = ({
   if (!userStatus && !signUpPop) {
     return (
       <div className="login">
-        <form action="/" method="post">
+        <form>
           <input
             className="loginput"
             id="userName"
             type="text"
             placeholder="username"
-            name="username"
           />
           <input
             className="loginput"
             id="passWord"
             type="password"
             placeholder="password"
-            name="password"
           />
           <button
             id="logbutton"
@@ -55,6 +54,16 @@ const NavBar = ({
             Sign Up
           </button>
         </form>
+        <button
+          onClick={() => {
+            localStorage.setItem("didThisWork", "yes");
+            // signInWithGoogleHandler();
+          }}
+        >
+          <span>
+            <a href="/google">Google</a>
+          </span>
+        </button>
       </div>
     );
     // if user has pressed sign up button, we return sign up form

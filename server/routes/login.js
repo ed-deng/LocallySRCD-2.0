@@ -11,9 +11,17 @@ require("../controllers/loginCredentials");
 router.post(
   "/",
   passport.authenticate("local", {
-    successRedirect: "/",
+    // successRedirect: "/",
     failureRedirect: "/login",
-  })
+  }),
+  (req, res) => {
+    // console.log("this is the req: ", req.body);
+    res.status(200).json(req.body.username);
+  }
 );
+
+router.get("/", userController.getGoogleUser, (req, res) => {
+  res.status(200).json(res.locals.username);
+});
 
 module.exports = router;

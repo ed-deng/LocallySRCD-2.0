@@ -1,10 +1,10 @@
-const express = require('express');
-const userController = require('../controllers/userController');
+const express = require("express");
+const userController = require("../controllers/userController");
 const router = express.Router();
-const path = require('path');
+const path = require("path");
 
-router.post('/', userController.createUser, (req, res) => {
-  console.log('post request to signup, completed');
+router.post("/", userController.createUser, (req, res) => {
+  // console.log('post request to signup, completed');
   res.status(200).json(res.locals);
 });
 

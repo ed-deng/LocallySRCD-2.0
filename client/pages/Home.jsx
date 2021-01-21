@@ -1,20 +1,38 @@
-import React, { Component } from 'react';
-import TopCategoriesContainer from '../containers/TopCategoriesContainer.jsx';
-import SearchContainer from '../containers/SearchContainer.jsx';
-import ResultsContainer from '../containers/ResultsContainer.jsx';
+import React, { Component } from "react";
+import TopCategoriesContainer from "../containers/TopCategoriesContainer.jsx";
+import SearchContainer from "../containers/SearchContainer.jsx";
+import ResultsContainer from "../containers/ResultsContainer.jsx";
 
 const Home = (props) => {
-  const { results, preferredLocations, closedLocations, closedStoreId } = props.state;
-  const { searchButtonHandler, catBtnHandler, reportClosed } = props;
+  const {
+    results,
+    preferredLocations,
+    closedLocations,
+    closedStoreId,
+    isFav,
+    favImageSrc,
+  } = props.state;
+  const {
+    searchButtonHandler,
+    catBtnHandler,
+    reportClosed,
+    saveFavorite,
+  } = props;
 
   return (
-    <div className='homeContainer'>
-      <p> Practice kindness. Check in with one another. 
+    <div className="homeContainer">
+      <p>
+        {" "}
+        Practice kindness. Check in with one another.
         <br></br>
-        Amplify your support. Shop locally! </p>
+        Amplify your support. Shop locally!{" "}
+      </p>
       <TopCategoriesContainer catBtnHandler={catBtnHandler} />
       <SearchContainer searchButtonHandler={searchButtonHandler} />
       <ResultsContainer
+        isFav={isFav}
+        favImageSrc={favImageSrc}
+        saveFavorite={saveFavorite}
         results={results}
         closedStoreId={closedStoreId}
         preferredLocations={preferredLocations}

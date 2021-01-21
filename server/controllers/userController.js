@@ -63,6 +63,10 @@ const userController = {
 
   getGoogleUser(req, res, next) {
     User.find({}, (err, user) => {
+      // if (err) {
+      //   console.log(err);
+      //   return next(err);
+      // }
       console.log(user);
       user = user.filter((userObj) => userObj.lastGoogleSignIn);
       let newestSignIn = [];
@@ -76,11 +80,12 @@ const userController = {
       // const sortedArr = user.sort((a, b) => {
       //   a.lastGoogleSignIn > b.lastGoogleSignIn ? 1 : -1;
       // });
-      console.log(
-        "this should be the most recent sign in with google: ",
-        newestSignInArr[0].username
-      );
+      // console.log(
+      //   "this should be the most recent sign in with google: ",
+      //   newestSignInArr[0].username
+      // );
       res.locals.username = newestSignInArr[0].username;
+      res.locals.prefLocations = newestSignInArr[0].prefLocations;
 
       return next();
       // if (err) {

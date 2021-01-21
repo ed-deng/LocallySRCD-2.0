@@ -17,6 +17,8 @@ class App extends Component {
       fetchTerm: "",
       signUpPop: false,
       closedStoreId: null,
+      isFav: false,
+      favImageSrc: "../assets/emptyheart.png",
       //longitude: number -> will be created after component mounts
       //latitude: number -> will be created after component mounts
       // results: an array of objects // will be created when server sends back retrieved list of results - this should be update whenever keyword or category is submitted by user
@@ -31,6 +33,7 @@ class App extends Component {
     this.createUser = this.createUser.bind(this);
     this.reportClosed = this.reportClosed.bind(this);
     this.signInWithGoogleHandler = this.signInWithGoogleHandler.bind(this);
+    this.saveFavorite = this.saveFavorite.bind(this);
   }
 
   updateUserCoordinates(latitude, longitude) {
@@ -63,7 +66,7 @@ class App extends Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log("data back from category ", data);
+        // console.log("data back from category ", data);
         this.setState((prevState) => {
           const newState = { ...prevState };
           newState.results = data.results;
@@ -120,10 +123,10 @@ class App extends Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
+        console.log("this is the data from the regular login: ", data);
         this.setState((prevState) => {
           const newState = { ...prevState };
-          newState.user = data;
+          newState.user = data.username;
           newState.isLoggedIn = true;
           newState.preferredLocations = data.prefLocations;
           return newState;
@@ -153,7 +156,7 @@ class App extends Component {
         console.log(data);
         this.setState((prevState) => {
           const newState = { ...prevState };
-          newState.user = data;
+          newState.user = data.username;
           newState.isLoggedIn = true;
           newState.preferredLocations = data.prefLocations;
           return newState;
@@ -245,6 +248,24 @@ class App extends Component {
       .catch((err) => console.log(err));
   }
 
+  saveFavorite(event) {
+    if (this.state.isFav === false) {
+      this.setState((prevState) => {
+        const newState = { ...prevState };
+        newState.isFav = true;
+        newState.favImageSrc = "../assets/fullheart.png";
+        return newState;
+      });
+    } else {
+      this.setState((prevState) => {
+        const newState = { ...prevState };
+        newState.isFav = false;
+        newState.favImageSrc = "../assets/emptyheart.png";
+        return newState;
+      });
+    }
+  }
+
   componentDidMount() {
     // grab the user's location using browser's location and updates state -> client needs to give permission to access location
     const successfulLookup = (position) => {
@@ -262,7 +283,7 @@ class App extends Component {
           // console.log("this is the data", data);
           this.setState((prevState) => {
             const newState = { ...prevState };
-            newState.user = data;
+            newState.user = data.username;
             newState.isLoggedIn = true;
             newState.preferredLocations = data.prefLocations;
             return newState;
@@ -312,6 +333,7 @@ class App extends Component {
                 catBtnHandler={this.categoryButtonHandler}
                 searchButtonHandler={this.searchButtonHandler}
                 reportClosed={this.reportClosed}
+                saveFavorite={this.saveFavorite}
               />
             )}
           />

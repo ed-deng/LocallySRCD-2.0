@@ -59,9 +59,24 @@ const NavBar = ({
             localStorage.setItem("didThisWork", "yes");
             // signInWithGoogleHandler();
           }}
+          style={{
+            border: "none",
+            padding: 0,
+            marginTop: 10,
+            marginLeft: 523,
+            backgroundColor: "white",
+          }}
         >
           <span>
-            <a href="/google">Google</a>
+            <a href="/google">
+              <img
+                src="../assets/btn_google_signin_light_focus_web.png"
+                style={{
+                  borderRadius: 100,
+                  border: "1px solid grey",
+                }}
+              ></img>
+            </a>
           </span>
         </button>
       </div>

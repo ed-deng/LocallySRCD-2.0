@@ -15,13 +15,15 @@ router.post(
     failureRedirect: "/login",
   }),
   (req, res) => {
-    // console.log("this is the req: ", req.body);
-    res.status(200).json(req.body.username);
+    // console.log("this is the res: ", res.body);
+    // console.log(req.body);
+    // console.log("THIS IS WHAT WE WANT", req.user);
+    res.status(200).json(req.user);
   }
 );
 
 router.get("/", userController.getGoogleUser, (req, res) => {
-  res.status(200).json(res.locals.username);
+  res.status(200).json(res.locals);
 });
 
 module.exports = router;

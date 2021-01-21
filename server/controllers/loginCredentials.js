@@ -16,6 +16,7 @@ passport.use(
       if (err) {
         return done(err);
       }
+      console.log("THIS IS THE user: ", user);
       if (!user) {
         return done(null, false, { message: "Incorrect username." });
       }

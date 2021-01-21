@@ -1,6 +1,5 @@
 // this file contains the example for the configurations necessary for the server
-// Rename this file settings.js and replace the examples with you own settings,
-// or create a new file called settings.js and copy/paste the code below and
+// Create a new file called settings.js and copy/paste the code below and
 // replace the examples with your own settings
 
 // connection string for MongoDB. If using MongoDB Atlas, use the string given
@@ -16,10 +15,12 @@ const clientSecret = "YOUR-CLIENT-SECRET";
 const dbName = "locally-srcd";
 
 // your name of collection that stores closed stores
-const closedStores = "closedStores";
+const closedStores = "closedstores";
 
 module.exports = {
   MongoURI,
   dbName,
   closedStores,
+  clientID,
+  clientSecret,
 };
